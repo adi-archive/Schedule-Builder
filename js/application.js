@@ -70,7 +70,7 @@ String.implement( 'pluralize', function( count, plural ){
 /* General functions */
 
 is_null_or_undefined = function( val ){
-	return val === null || val === undefined;
+  return val === null || val === undefined;
 };
 
 hourToLabel = function( hour ){
