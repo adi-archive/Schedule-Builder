@@ -31,37 +31,53 @@ window.addEvent( 'domready', function() {
   var app = new App();
   app.render( $('app') );
   app.preload();
-  });
+});
   
 var data_api_url = "http://markland.dyndns.org:8080";
-//var data_api_url = "http://localhost:3000";
+
 
 /* Extensions */
-decimalToDate = function( decimal ){ return new Date( 0,0,0,Math.floor( decimal ),(decimal-Math.floor( decimal ))*60,0,0 ); }
-dateToDecimal = function( date ){ return date.getHours() + date.getMinutes()/60.0; }
+
+decimalToDate = function( decimal ){ 
+	return new Date( 0,0,0,Math.floor( decimal ),(decimal-Math.floor( decimal ))*60,0,0 ); 
+};
+
+dateToDecimal = function( date ){ 
+	return date.getHours() + date.getMinutes()/60.0; 
+};
+
 decimalToTime = function( decimal ){
   var date = decimalToDate( decimal );
   var time = String.from( date.get12HourHour() ) + ":";
   if ( date.getMinutes() < 10 ) time += "0";
   return time + String.from( date.getMinutes() ) + date.getDesignator();
-}
+};
 
 Date.implement({
   get12HourHour: function(){ return (this.getHours() > 12) ? this.getHours() - 12 : (this.getHours() === 0) ? 12 : this.getHours(); },
-  getDesignator: function(){ return (this.getHours() < 12) ? "am": "pm"; }});
+  getDesignator: function(){ return (this.getHours() < 12) ? "am": "pm"; }
+});
 
 String.implement( 'pluralize', function( count, plural ){
   if ( count != 1 ) {
-    if ( plural == null ) return this + 's';
+    if ( is_null_or_undefined( plural ) ) return this + 's';
     else return plural;
   }
-  else { return this; }});
+  else { return this; }
+});
+
+
+/* General functions */
+
+is_null_or_undefined = function( val ){
+	return val === null || val === undefined;
+};
 
 hourToLabel = function( hour ){
   if ( hour < 12 ) {  return String.from( hour ) + "am" }
   else if ( hour === 12 ) { return "noon" }
   else { return String.from( hour%12 ) + "pm" }
-}
+};
 
 daysToAbbreviation = function( days ){
   var abbreviation = "";
@@ -71,7 +87,7 @@ daysToAbbreviation = function( days ){
   if ( days.contains( 'Thursday' )){ abbreviation += "Th"; }
   if ( days.contains( 'Friday' )){ abbreviation += "F"; }
   return abbreviation;
-}
+};
 
 abbreviationToDays = function( abbrev ){
   var days = new Array();
@@ -83,21 +99,21 @@ abbreviationToDays = function( abbrev ){
   if ( str.contains( 'r' ) ){ days.include( 'Thursday' ); }
   if ( str.contains( 'f' ) ){ days.include( 'Friday' ); }
   return days;
-}
+};
 
 sortSections = function(a, b){
   if ( a.id < b.id ){ return -1; }
   else if ( a.id > b.id ){ return 1; }
   else { return 0; }
-}
+};
 
 showFade = function(){
   $('fade').setStyle( 'display', 'block' );
-}
+};
 
 hideFade = function(){
   $('fade').setStyle( 'display', 'none' );
-}
+};
 
 
 /* Classes */
@@ -127,7 +143,7 @@ var Instructor = new Class({
     this.rank = data.culpa_rank;
     this.link = data.culpa_link;
   },
-  getName: function(){ return (this.name == null) ? 'Unknown' : this.name; }
+  getName: function(){ return ( is_null_or_undefined( this.name ) ) ? 'Unknown' : this.name; }
 });
 
 var Section = new Class({
@@ -156,9 +172,9 @@ var Section = new Class({
   getSectionGroup: function(){ return new SectionGroup( this.days, this.start, this.end ); },
   getLength: function(){ return this.end - this.start; },
   getInstructor: function(){ return this.instructor; },
-  getLocation: function(){ return ( this.building == null) ? 'To be annouced' : this.room + ' ' + this.building; },
-  getEnrollment: function(){ return ( this.enrollment == null ) ? 0 : this.enrollment; },
-  getMaxEnrollment: function(){ return ( this.max_enrollment == null ) ? 0 : this.max_enrollment; },
+  getLocation: function(){ return ( is_null_or_undefined( this.building ) ) ? 'To be annouced' : this.room + ' ' + this.building; },
+  getEnrollment: function(){ return ( is_null_or_undefined( this.enrollment ) ) ? 0 : this.enrollment; },
+  getMaxEnrollment: function(){ return ( is_null_or_undefined( this.max_enrollment ) ) ? 0 : this.max_enrollment; },
   getDescription: function(){ return this.description; },
   getTitle: function(){ return this.title; },
   getURL: function(){ return this.url; },
@@ -524,8 +540,8 @@ var Browser = new Class({
     this.loadResults();
   },
   loadResults: function( limit, page ){
-    if ( limit == null ){ limit = this.options.limit; }
-    if ( page == null ){ page = 1; }
+    if ( is_null_or_undefined( limit ) ){ limit = this.options.limit; }
+    if ( is_null_or_undefined( page ) ){ page = 1; }
     var semester = this.getSemester();
     var request = new Request.JSONP({
       url: data_api_url + '/courses/search',
