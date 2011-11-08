@@ -33,7 +33,7 @@ window.addEvent( 'domready', function() {
   app.preload();
 });
   
-var data_api_url = "http://markland.dyndns.org:8080";
+var data_api_url = "http://courses.adicu.com";
 
 
 /* Extensions */
@@ -609,7 +609,7 @@ var App = new Class({
       var call_numbers = params[1].split( ',' ).filter( function( item, index ){ return ( item.trim() != "" )});
       if ( call_numbers.length > 0 ){
         var request = new Request.JSONP({
-          url: 'http://markland.dyndns.org:8080/sections/get',
+	  url: data_api_url + '/sections/get',
           callbackKey: 'callback',
           data: { "call_number": call_numbers, "s": semester },
           onComplete: function( data ){
