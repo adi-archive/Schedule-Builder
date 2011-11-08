@@ -1,0 +1,7 @@
+config.yaml
+data.sql
+nohup.out
+.bundle
+.rvmrc
+scraper.log
+*.swp
